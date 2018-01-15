@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="fr.m2i.signaturecomposant.MainActivity"
+    >
+
+
+    <fr.m2i.signaturecomposant.TagEdit
+        android:id="@+id/zoneSignature"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        />
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="effacer"
+        android:onClick="effacer"
+        >
+    </Button>
+
+
+
+
+</LinearLayout>
