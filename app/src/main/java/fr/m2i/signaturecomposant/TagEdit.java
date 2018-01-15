@@ -2,15 +2,22 @@ package fr.m2i.signaturecomposant;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 
 
 /**
@@ -103,6 +110,26 @@ public class TagEdit extends AppCompatImageView {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.drawPath(path, paint);
+    }
+
+    public void save (String fileName, Context ctx){
+
+
+        Bitmap btmp = getDrawingCache();
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath();
+        File file = new File(path,fileName);
+        try {
+            FileOutputStream  stream = new FileOutputStream(file);
+            btmp.compress(Bitmap.CompressFormat.PNG,100,stream);
+            stream.flush();
+            stream.close();
+            Toast.makeText(ctx, "Dessin enregistré", Toast.LENGTH_SHORT).show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(ctx, "Erreur d'enregistrement", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
 
