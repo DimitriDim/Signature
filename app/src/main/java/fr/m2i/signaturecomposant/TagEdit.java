@@ -35,9 +35,8 @@ public class TagEdit extends AppCompatImageView {
     Paint paint;
 
 
-
     public TagEdit(Context context, @Nullable AttributeSet attrs) {
-        super(context,attrs);
+        super(context, attrs);
 
         // définir un objet Paint: ensemble des paramètres de dessin
         paint = new Paint();
@@ -56,12 +55,13 @@ public class TagEdit extends AppCompatImageView {
         path = new Path();
 
         //Récupérer des valeurs définies dans le layout XML
-        TypedArray ta = context.obtainStyledAttributes(attrs,R.styleable.TagEdit);
-        tagColor = ta.getInt(R.styleable.TagEdit_tagColor,0);
-        tagWidth = ta.getInt(R.styleable.TagEdit_tagWidth,1);
+        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.TagEdit);
+        tagColor = ta.getInt(R.styleable.TagEdit_tagColor, 0);
+        tagWidth = ta.getInt(R.styleable.TagEdit_tagWidth, 1);
 
     }
-    public void clear(){
+
+    public void clear() {
         //efface avec un nouvel objet vide
         path = new Path();
         //force a redessin
@@ -95,7 +95,7 @@ public class TagEdit extends AppCompatImageView {
             case MotionEvent.ACTION_DOWN:
                 path.moveTo(eventX, eventY);
                 return true;
-             // mouvement
+            // mouvement
             case MotionEvent.ACTION_MOVE:
                 path.lineTo(eventX, eventY);
                 break;
@@ -112,25 +112,35 @@ public class TagEdit extends AppCompatImageView {
         canvas.drawPath(path, paint);
     }
 
-    public void save (String fileName, Context ctx){
+    //throws TagEditException veux dire que cette méthode peut lever une exception
+    public void save(String fileName) throws TagEditException {
 
+        setDrawingCacheEnabled(true);
+        buildDrawingCache(true);
+        Bitmap btmp = Bitmap.createBitmap(getDrawingCache());
 
-        Bitmap btmp = getDrawingCache();
         String path = Environment.getExternalStorageDirectory().getAbsolutePath();
-        File file = new File(path,fileName);
+        File file = new File(path, fileName);
         try {
-            FileOutputStream  stream = new FileOutputStream(file);
-            btmp.compress(Bitmap.CompressFormat.PNG,100,stream);
+            FileOutputStream stream = new FileOutputStream(file);
+            btmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
             stream.flush();
             stream.close();
-            Toast.makeText(ctx, "Dessin enregistré", Toast.LENGTH_SHORT).show();
+            System.out.println("enregistement ok");
+
 
         } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(ctx, "Erreur d'enregistrement", Toast.LENGTH_SHORT).show();
+            throw new TagEditException();
         }
 
     }
 
+    //création de la classe pour gérer l'exception de TagEdit
+    public class TagEditException extends Exception {
+
+        public TagEditException() {
+            super("erreur pendant l'enregistrement de la signature");
+        }
+    }
 
 }
